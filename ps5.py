@@ -55,7 +55,48 @@ def process(url):
 # Problem 1
 
 # TODO: NewsStory
+class NewsStory(object):
+    def __init__(self,guid,title,description,link,pubdate):
+        '''
+        constructor for class NewStory
+        requires the inputs:
+        guid - string
+        title - string
+        description - string
+        link - string
+        pubdate - a datetime (probably an integer, or a string in the formate of a date and time)
+        '''
+        self.guid=guid
+        self.title=title
+        self.description=description
+        self.link=link
+        self.pubdate=pubdate
 
+    def get_guid(self):
+        '''
+        returns guid - globablly unique identifier
+        '''
+        return self.guid
+    def get_title(self):
+        '''
+        returns the title
+        '''
+        return self.title
+    def get_description(self):
+        '''
+        returns the description
+        '''
+        return self.description
+    def get_link(self):
+        '''
+        returns the link (url)
+        '''
+        return self.link
+    def get_pubdate(self):
+        '''
+        returns the pubdate
+        '''
+        return self.pubdate
 
 #======================
 # Triggers
