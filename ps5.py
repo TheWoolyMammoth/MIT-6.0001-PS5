@@ -115,9 +115,43 @@ class Trigger(object):
 
 # Problem 2
 # TODO: PhraseTrigger
+class PhraseTrigger(Trigger):
+    def __init__(self,phrase):
+        '''
+        constructor
+        '''
+        self.phrase=phrase
+    def is_phrase_in(self,text):
+        '''
+        returns true if phrase in string, false otherwise
+        '''
+        # testing to ensure the phrase is good: only one space between words and no punctuation included
+        is_phrase_good = False
+        for x in string.punctuation:
+            if x in self.phrase:
+                if x == " " and self.phrase.count(" ") <= 1:
+                    is_phrase_good=True
+                else:
+                    is_phrase_good=False
+                    Break
+        if is_phrase_good==True:
+            for x in string.punctuation:
+                if x in self.text:
+                    cleaned_string=text.replace(x," ")
+            list_words_text=cleaned_string.lower().split()
+            formatted_word=" ".join(list_words_text)
+            if self.phrase in formatted_word == True:
+                return True
+            else:
+                return False
 
 # Problem 3
 # TODO: TitleTrigger
+class TitleTrigger(PhraseTrigger):
+    def __init__(self):
+        '''
+        constructor
+        '''
 
 # Problem 4
 # TODO: DescriptionTrigger
