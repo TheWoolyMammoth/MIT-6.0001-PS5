@@ -120,64 +120,102 @@ class PhraseTrigger(Trigger):
         '''
         constructor
         '''
-        self.phrase=phrase
-    def is_phrase_in(self,text):
-        '''
-        returns true if phrase in string, false otherwise
-        '''
-        # testing to ensure the phrase is good: only one space between words and no punctuation included
-        is_phrase_good = False
-        for x in string.punctuation:
-            if x in self.phrase:
-                if x == " " and self.phrase.count(" ") <= 1:
-                    is_phrase_good=True
-                else:
-                    is_phrase_good=False
-                    Break
-        if is_phrase_good==True:
-            for x in string.punctuation:
-                if x in self.text:
-                    cleaned_string=text.replace(x," ")
-            list_words_text=cleaned_string.lower().split()
-            formatted_word=" ".join(list_words_text)
-            if self.phrase in formatted_word == True:
-                return True
-            else:
-                return False
+        self.phrase=phrase.lower()
+
+    def is_phrase_in(self, text):
+        text = text.lower()
+        for letter in string.punctuation:
+            text = text.replace(letter, ' ')
+        split_text = text.split(' ')
+        while '' in split_text:
+            split_text.remove('')
+        phrase_split = self.phrase.split()
+        test = []
+        for ph in phrase_split:
+            for i, word in enumerate(split_text):
+                if ph == word:
+                    test.append(i)
+        found = True
+        if len(test) < len(phrase_split):
+            return False
+        for i in range(len(test) - 1):
+            if test[i + 1] - test[i] != 1:
+                found = False
+        return found
 
 # Problem 3
-# TODO: TitleTrigger
 class TitleTrigger(PhraseTrigger):
-    def __init__(self):
-        '''
-        constructor
-        '''
+    def evaluate(self,story):
+          return self.is_phrase_in(story.get_title())
 
 # Problem 4
-# TODO: DescriptionTrigger
+class DescriptionTrigger(PhraseTrigger):
+    def evaluate(self, story):
+        return self.is_phrase_in(story.get_description())
 
 # TIME TRIGGERS
 
 # Problem 5
-# TODO: TimeTrigger
-# Constructor:
-#        Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
-#        Convert time from string to a datetime before saving it as an attribute.
+class TimeTrigger(Trigger):
+    def __init__(self,date_time):
+        '''
+         Constructor:
+         Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
+         Convert time from string to a datetime before saving it as an attribute.
+        '''
+        date=datetime.strptime(date_time,"%d %b %Y %H:%M:%S")
+        date.replace(tzinfo=pytz.timezone("EST"))
+        self.time=date
+
 
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
+class BeforeTrigger(TimeTrigger):
+    def evaluate(self, story):
+        if story.get_pubdate().date()<=self.time.date():
+            return True
+        else:
+            return False
+
+class AfterTrigger(TimeTrigger):
+    def evaluate(self, story):
+        if story.get_pubdate().date()>self.time.date():
+            return True
+        else:
+            return False
+
 
 
 # COMPOSITE TRIGGERS
 
 # Problem 7
-# TODO: NotTrigger
+
+class NotTrigger(Trigger):
+    def __init__(self,trigger):
+        '''
+        consturctor
+        '''
+        self.trigger=trigger
+    def evaluate(self, story):
+        return not self.trigger.evaluate(story)
 
 # Problem 8
-# TODO: AndTrigger
+class AndTrigger(Trigger):
+    def __init__(self,t1,t2):
+        self.t1=t1
+        self.t2=t2
+    def evaluate(self, story):
+        if self.t1.evaluate(story)==True and self.t2.evaluate(story)==True:
+            return True
 
 # Problem 9
-# TODO: OrTrigger
+class OrTrigger(Trigger):
+    def __init__(self,t1,t2):
+        self.t1=t1
+        self.t2=t2
+    def evaluate(self, story):
+        if self.t1.evaluate(story)==True or self.t2.evaluate(story)==True:
+            return True
 
 
 #======================
