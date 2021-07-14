@@ -229,10 +229,14 @@ def filter_stories(stories, triggerlist):
 
     Returns: a list of only the stories for which a trigger in triggerlist fires.
     """
-    # TODO: Problem 10
-    # This is a placeholder
-    # (we're just returning all the stories, with no filtering)
-    return stories
+    list_of_stories=[]
+    for story in stories:
+        for trigger in triggerlist:
+            if trigger.evaluate(story)==True:
+                list_of_stories.append(story)
+    return list_of_stories
+
+
 
 
 
@@ -271,8 +275,8 @@ def main_thread(master):
     # to what is currently in the news
     try:
         t1 = TitleTrigger("election")
-        t2 = DescriptionTrigger("Trump")
-        t3 = DescriptionTrigger("Clinton")
+        t2 = DescriptionTrigger("Covid")
+        t3 = DescriptionTrigger("Biden")
         t4 = AndTrigger(t2, t3)
         triggerlist = [t1, t4]
 
